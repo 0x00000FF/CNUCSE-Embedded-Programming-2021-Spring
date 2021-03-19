@@ -120,12 +120,9 @@ main
                 MUL   R1, R2    ; R1 *= R2
                 
                 CMP   R0, #5    ; compare R0 and imm 5
-                BEQ   PASS_ADD  ; if equals branch to PASS_ADD
-                
-                ADD R1, R0      ; R1 += R0 
-                SUB R1, R2      ; R1 -= R2
-                                ; These can be ADDNE, SUBNE
-                                ; Instead of using CMP-BEQ
+
+                ADDNE R1, R0      ; R1 += R0 (Conditional)
+                SUBNE R1, R2      ; R1 -= R2 (Conditional)
                 
 PASS_ADD        B     .         ; Exec done, wait forever
 

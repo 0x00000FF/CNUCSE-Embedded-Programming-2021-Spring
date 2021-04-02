@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage[a4paper, margin={3cm, 2.54cm, 2.54cm, 2.54cm}]{geometry}
+\usepackage{graphicx}
+\usepackage{kotex}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+
+\setmainhangulfont{Malgun Gothic}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{2021 임베디드 소프트웨어 실습 과제}
+\rhead{실습 1. 개발환경 익히기}
+\lfoot{충남대학교 컴퓨터공학과}
+\rfoot{\thepage}
+
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{1pt}
+
+\begin{document}
+
+    \paragraph{학번: 201704150}
+    \paragraph{이름: 허강준}
+
+    \section*{문제1 \normalsize\normalfont{
+        참고자료 1번{[STM32F429\_register boundary addresses.pdf]}을 참고하여
+        LED를 사용하기 위한 GPIOI의 base 주소를 적으시오. GPIOI의 base 주소는 
+        참고자료 2번에서 Periphral GPIO의 boundary address의 시작 주소를 의미한다. 
+    }}
+
+    \begin{mdframed}
+        \texttt{0x40022000}
+    \end{mdframed}
+
+    \section*{문제2 \normalsize\normalfont{
+        참고자료 2번{[U-BRAIN\_CORE\_V13.pdf, 1p]}은 uBrain의 회로도이다. 
+        1p의 STM32F429 프로세서와 LED들이 연결된 모습을 찾을 수 있다. 
+        LED1, LED2, LED3, LED4의 4개의 LED가 STM32F429 PIN에 연결되어 있다. 
+        GPIOI에서 LED로 연결된 STM32F429 프로세서의 PIN번호를 적으시오.
+    }}
+
+    \begin{mdframed}
+        \texttt{PI8, PI9, PI10, PI11}
+    \end{mdframed}
+
+    \section*{문제3 \normalsize\normalfont{
+        Keil uVision에서 디버그 모드에 진입해서 메뉴바의 Peripherals -> GPIO-GPIOI를 
+        선택한 후에 GPIOI 포트 설정과 관련된 레지스터들을 확인하고 이름을 모두 적으시오.(10개)
+    }}
+
+    \begin{mdframed}
+        \texttt{MODER}, \texttt{OTYPER}, \texttt{OSPEEDR}, \texttt{PUPDR}, \texttt{IDR}, 
+        \texttt{ODR}, \texttt{BSRR}, \texttt{LCKR}, \texttt{AFRL}, \texttt{AFRH}
+    \end{mdframed}
+
+    \section*{문제4 \normalsize\normalfont{
+        GPIOI를 LED용도로 사용하기 위해 설정해야하는 레지스터들의 메모리 맵상의 주소와 레지스터들의 
+        기능을 쓰시오. 레지스터들의 주소는 참고자료 3번 {[STM32F4 Reference manual GPIO]} 문서 – 
+        p.283 를 보면 알 수 있다.
+    }}
+
+    \begin{mdframed}
+        \texttt{GPIOI Base Address(GPIOI\_BASE) = 0x40022000}
+
+        \begin{itemize}
+            \item \texttt{GPIOx\_MODER} @ \texttt{GPIOI\_BASE + 0x00}
+            
+            Port 입출력 모드를 설정하는 레지스터
+
+            \item \texttt{GPIOx\_OTYPER} @ \texttt{GPIOI\_BASE + 0x04}
+            
+            아웃풋 유형을 설정하는 레지스터 (push-pull(기본값) / open-drain)
+
+            \item \texttt{GPIOx\_OSPEEDR} @ \texttt{GPIOI\_BASE + 0x08}
+            
+            아웃풋 속도를 설정하는 레지스터로 아웃풋을 받는 GPIO 장치의 스펙에 따라 결정되어야 함.
+
+            \item \texttt{GPIOx\_PUPDR} @ \texttt{GPIOI\_BASE + 0x0C}
+            
+            해당 핀이 Pull-up State인지 Pull-down State인지 결정하는 레지스터
+
+            \item \texttt{GPIOx\_IDR} @ \texttt{GPIOI\_BASE + 0x10}
+            
+            데이터 Input에 사용되는 레지스터
+
+            \item \texttt{GPIOx\_ODR} @ \texttt{GPIOI\_BASE + 0x14}
+            
+            데이터 Output에 사용되는 레지스터
+            
+            \item \texttt{GPIOx\_BSRR} @ \texttt{GPIOI\_BASE + 0x18}
+            
+            특정 ODR 비트에 Batch Set/Reset을 위해 사용되는 레지스터
+
+            \item \texttt{GPIOx\_LCKR} @ \texttt{GPIOI\_BASE + 0x1C}
+            
+            IO 동기화를 위해 Lock/Unlock 플래그를 가지고 있는 레지스터
+
+            \item \texttt{GPIOx\_AFRH} @ \texttt{GPIOI\_BASE + 0x20}
+            
+            GPIO를 다른 핀으로 이용할 때 (Alternate Function) 사용되며 AFR 레지스터의 상위 32비트
+
+            \item \texttt{GPIOx\_AFRL} @ \texttt{GPIOI\_BASE + 0x24}
+            
+            GPIO를 다른 핀으로 이용할 때 (Alternate Function) 사용되며 AFR 레지스터의 하위 32비트
+        \end{itemize}
+        
+    \end{mdframed}
+
+    \section*{문제x \normalsize\normalfont{
+        실습 코드?
+    }}
+
+    \begin{mdframed}
+        LED를 사용하기 위해 GPIO Initialization Struct에 다음과 같은 값이 입력되었다.
+        
+        \begin{itemize}
+            \item Pin (각 LED에 해당하는 GPIO 핀)
+            \item Output Mode (Push-pull mode)
+            \item Pull up or Pull down (Pull-up)
+            \item Output Speed (Fast)
+        \end{itemize}
+
+        Pin은 외부에서 Argument를 받아와 설정하는 것이므로 일부 High-Level Programming의 
+        요소를 이용하여 쉽게 이해할 수 있으나, Output Mode의 Push-pull, Pull-up 등은 전기
+        전자적인 요소에 대한 선행 이해가 필요하였다. 
+
+        만일 Output이 Pull-down으로 설정된다면 해당 GPIO 핀에 Write할 시 전기 신호는 Low로
+        전달될 것으로 보이며, LED를 켜는 것이 목적이므로 Pull-up으로 설정하는 것이 합당할 것이다.
+
+        또한 Push-pull mode를 사용하여 전압이 높은 쪽에서 낮은 쪽으로 전달되도록 한 것으로 보인다.
+
+        마지막으로, Fast Output은 동기화와 관련된 부분으로 보이는데 LED와 같은 단순한 소자는
+        별도로 동기화가 필요하지 않으므로 Fast를 사용한 것으로 보인다.
+    \end{mdframed}
+
+\end{document}
